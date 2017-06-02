@@ -1,55 +1,48 @@
-# ii - irc it - simple but flexible IRC client
-#   (C)opyright MMV-MMVI Anselm R. Garbe
-#   (C)opyright MMV-MMVII Anselm R. Garbe, Nico Golde
-
+# See LICENSE file for copyright and license details.
 include config.mk
 
-SRC      = ii.c
-OBJ      = ${SRC:.c=.o}
+SRC = ii.c strlcpy.c
+OBJ = ${SRC:.c=.o}
 
-all: options ii
-	@echo built ii
+all: ii
 
 options:
 	@echo ii build options:
-	@echo "LIBS     = ${LIBS}"
-	@echo "INCLUDES = ${INCLUDES}"
 	@echo "CFLAGS   = ${CFLAGS}"
 	@echo "LDFLAGS  = ${LDFLAGS}"
 	@echo "CC       = ${CC}"
 
-.c.o:
-	@echo CC $<
-	@${CC} -c ${CFLAGS} $<
+.o:
+	$(LD) -o $@ $< $(LDFLAGS)
 
-dist: clean
-	@mkdir -p ii-${VERSION}
-	@cp -R query.sh Makefile CHANGES README FAQ LICENSE config.mk ii.c ii.1 ii-${VERSION}
-	@tar -cf ii-${VERSION}.tar ii-${VERSION}
-	@gzip ii-${VERSION}.tar
-	@rm -rf ii-${VERSION}
-	@echo created distribution ii-${VERSION}.tar.gz
+.c.o:
+	$(CC) -c -o $@ $< $(CFLAGS)
 
 ii: ${OBJ}
-	@echo LD $@
-	@${CC} -o $@ ${OBJ} ${LDFLAGS}
+	${CC} -o $@ ${OBJ} ${LDFLAGS}
 
 install: all
-	@mkdir -p ${DESTDIR}${DOCDIR}
-	@mkdir -p ${DESTDIR}${BINDIR}
-	@mkdir -p ${DESTDIR}${MAN1DIR}
-
-	@install -d ${DESTDIR}${BINDIR} ${DESTDIR}${MAN1DIR}
-	@install -m 644 CHANGES README query.sh FAQ LICENSE ${DESTDIR}${DOCDIR}
-	@install -m 775 ii ${DESTDIR}${BINDIR}
-	@install -m 444 ii.1 ${DESTDIR}${MAN1DIR}
-	@echo "installed ii"
+	mkdir -p ${DESTDIR}${DOCDIR}
+	mkdir -p ${DESTDIR}${BINDIR}
+	mkdir -p ${DESTDIR}${MAN1DIR}
+	install -d ${DESTDIR}${BINDIR} ${DESTDIR}${MAN1DIR}
+	install -m 644 CHANGES README FAQ LICENSE ${DESTDIR}${DOCDIR}
+	install -m 775 ii ${DESTDIR}${BINDIR}
+	sed "s/VERSION/${VERSION}/g" < ii.1 > ${DESTDIR}${MAN1DIR}/ii.1
+	chmod 644 ${DESTDIR}${MAN1DIR}/ii.1
 
 uninstall: all
-	@rm -f ${DESTDIR}${MAN1DIR}/ii.1
-	@rm -rf ${DESTDIR}${DOCDIR}
-	@rm -f ${DESTDIR}${BINDIR}/ii
-	@echo "uninstalled ii"
+	rm -f ${DESTDIR}${MAN1DIR}/ii.1 \
+		${DESTDIR}${BINDIR}/ii
+	rm -rf ${DESTDIR}${DOCDIR}
+
+dist: clean
+	mkdir -p ii-${VERSION}
+	cp -R Makefile CHANGES README FAQ LICENSE strlcpy.c arg.h \
+		config.mk ii.c ii.1 ii-${VERSION}
+	tar -cf ii-${VERSION}.tar ii-${VERSION}
+	gzip ii-${VERSION}.tar
+	rm -rf ii-${VERSION}
 
 clean:
-	rm -f ii *~ *.o *core *.tar.gz
+	rm -f ii *.o

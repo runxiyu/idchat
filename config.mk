@@ -1,4 +1,5 @@
 # Customize to fit your system
+VERSION = 1.7
 
 # paths
 PREFIX      = /usr/local
@@ -12,17 +13,18 @@ DESTDIR     =
 
 INCDIR      = ${PREFIX}/include
 LIBDIR      = ${PREFIX}/lib
-VERSION     = 1.7
 
 # includes and libs
 INCLUDES    = -I. -I${INCDIR} -I/usr/include
 LIBS        = -L${LIBDIR} -L/usr/lib -lc
-# uncomment and comment other variables for compiling on Solaris
-#LIBS = -L${LIBDIR} -L/usr/lib -lc -lsocket -lnsl
-#CFLAGS      = -g ${INCLUDES} -DVERSION=\"${VERSION}\"
 
 # compiler
 CC          = cc
-CFLAGS      = -g -O0 -W -Wall ${INCLUDES} -DVERSION=\"${VERSION}\"
-LDFLAGS     = ${LIBS}
 
+# debug
+#CFLAGS      = -g -O0 -pedantic -Wall ${INCLUDES} -DVERSION=\"${VERSION}\" -std=c99 -D_DEFAULT_SOURCE
+#LDFLAGS     = ${LIBS}
+
+# release
+CFLAGS     = -Os ${INCLUDES} -DVERSION=\"${VERSION}\" -std=c99 -D_DEFAULT_SOURCE
+LDFLAGS    = -s

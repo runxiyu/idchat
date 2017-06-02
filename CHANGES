@@ -1,3 +1,34 @@
+1.8 (2017-??-??, unreleased):
+    - prevent nick collisions by only setting the nick after the server
+      accepted it and print a message about change to server log.
+    - remove query.sh.
+    - add OpenBSD pledge(2) support.
+    - fix QUIT message string.
+    - raw IRC output to stdout.
+    - add quit command (/q [string]).
+    - write timestamp in outfile as UNIX timestamp (UTC+0).
+    - server host (-s) doesn't default to irc.freenode and is now required.
+    - add option (-u) to connect directly to a UNIX domain socket, this
+      is useful for tunneling connections.
+    - remove "in" file when leaving a channel (enabled commented code).
+    - remove "in" files on exit.
+    - use IRC_MAX (512), instead of PIPE_BUF (4096) on most systems.
+      PIPE_BUF is guaranteed to be atleast 512 bytes for atomic operations.
+    - Makefile: always be verbose.
+    - use C99 and -D_DEFAULT_SOURCE
+    - remove obsolete gethostbyname, use getaddrinfo.
+    - IPV6 support.
+    - timeout now uses separate exit statuscode 2.
+    - cleanup:
+        - use arg.h for command-line option parsing.
+        - use sbase util functions (estrtol, eprintf).
+        - use and import OpenBSD strlcpy().
+        - man page typos.
+    - style:
+        - linewrap to 79 characters.
+        - coding style fixes.
+        - non-roman numerals for LICENSE period.
+
 1.7 (2013-01-05)
     - -k now specifies an environment variable that contains the
       server key. This behaviour has been changed in order to not
