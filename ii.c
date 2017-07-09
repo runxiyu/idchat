@@ -141,7 +141,7 @@ channel_normalize_path(char *s)
 	for (; *s; s++) {
 		if (isalpha(*s))
 			*s = tolower(*s);
-		else if (!isdigit(*s) && !strchr(".#&", *s))
+		else if (!isdigit(*s) && !strchr(".#&+!-", *s))
 			*s = '_';
 	}
 }
