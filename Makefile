@@ -21,6 +21,8 @@ options:
 ii: ${OBJ}
 	${CC} -o $@ ${OBJ} ${LDFLAGS}
 
+${OBJ}: arg.h
+
 install: all
 	mkdir -p ${DESTDIR}${DOCDIR}
 	mkdir -p ${DESTDIR}${BINDIR}
