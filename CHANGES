@@ -1,4 +1,4 @@
-1.8 (2017-??-??, unreleased):
+1.8 (2018-02-04):
     - prevent nick collisions by only setting the nick after the server
       accepted it and print a message about change to server log.
     - remove query.sh.
