@@ -24,8 +24,9 @@ char *argv0;
 
 #include "arg.h"
 
-#undef strlcpy
+#ifdef NEED_STRLCPY
 size_t strlcpy(char *, const char *, size_t);
+#endif /* NEED_STRLCPY */
 
 #define IRC_CHANNEL_MAX   200
 #define IRC_MSG_MAX       512 /* guaranteed to be <= than PIPE_BUF */

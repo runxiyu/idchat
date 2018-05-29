@@ -6,6 +6,9 @@ PREFIX    = /usr/local
 MANPREFIX = ${PREFIX}/share/man
 DOCPREFIX = ${PREFIX}/share/doc
 
-CFLAGS   = -Os
+# on systems which provide strlcpy(3),
+# remove NEED_STRLCPY from CFLAGS and
+# remove strlcpy.o from LIBS
+CFLAGS   = -DNEED_STRLCPY -Os
 LDFLAGS  = -s
-LIBS     =
+LIBS     = strlcpy.o

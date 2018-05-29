@@ -3,7 +3,7 @@
 
 include config.mk
 
-SRC = ii.c strlcpy.c
+SRC = ii.c
 OBJ = $(SRC:.c=.o)
 
 IICFLAGS = -DVERSION=\"$(VERSION)\" -D_DEFAULT_SOURCE $(CFLAGS)
@@ -19,7 +19,7 @@ options:
 .c.o:
 	$(CC) $(IICFLAGS) -c $<
 
-ii: $(OBJ)
+ii: $(OBJ) $(LIBS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJ) $(LIBS)
 
 $(OBJ): arg.h
