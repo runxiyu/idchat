@@ -460,15 +460,21 @@ proc_channels_input(int ircfd, Channel *c, char *buf)
 	char *p = NULL;
 	size_t buflen;
 
-	if (buf[0] != '/' && buf[0] != '\0') {
+	if (buf[0] == '\0')
+		return;
+	if (buf[0] != '/') {
 		proc_channels_privmsg(ircfd, c, buf);
 		return;
 	}
+
 	msg[0] = '\0';
+	if ((buflen = strlen(buf)) < 2)
+		return;
 	if (buf[2] == ' ' || buf[2] == '\0') {
-		buflen = strlen(buf);
 		switch (buf[1]) {
 		case 'j': /* join */
+			if (buflen < 3)
+				return;
 			if ((p = strchr(&buf[3], ' '))) /* password parameter */
 				*p = '\0';
 			if ((buf[3] == '#') || (buf[3] == '&') || (buf[3] == '+') ||
