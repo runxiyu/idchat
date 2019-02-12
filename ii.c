@@ -645,7 +645,7 @@ proc_server_cmd(int fd, char *buf)
 				argv[TOK_NICKSRV], argv[TOK_ARG],
 				argv[TOK_TEXT] ? argv[TOK_TEXT] : "");
 	} else if (!strcmp("NOTICE", argv[TOK_CMD])) {
-		snprintf(msg, sizeof(msg), "-!- \"%s\")",
+		snprintf(msg, sizeof(msg), "-!- \"%s\"",
 				argv[TOK_TEXT] ? argv[TOK_TEXT] : "");
 	} else if (!strcmp("PRIVMSG", argv[TOK_CMD])) {
 		snprintf(msg, sizeof(msg), "<%s> %s", argv[TOK_NICKSRV],
