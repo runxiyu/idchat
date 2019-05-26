@@ -377,10 +377,10 @@ tcpopen(const char *host, const char *service)
 	}
 
 	for (rp = res; rp; rp = rp->ai_next) {
-		fd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+		fd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
 		if (fd == -1)
 			continue;
-		if (connect(fd, res->ai_addr, res->ai_addrlen) == -1) {
+		if (connect(fd, rp->ai_addr, rp->ai_addrlen) == -1) {
 			close(fd);
 			fd = -1;
 			continue;
