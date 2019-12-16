@@ -140,9 +140,9 @@ static void
 channel_normalize_path(char *s)
 {
 	for (; *s; s++) {
-		if (isalpha(*s))
-			*s = tolower(*s);
-		else if (!isdigit(*s) && !strchr(".#&+!-", *s))
+		if (isalpha((unsigned char)*s))
+			*s = tolower((unsigned char)*s);
+		else if (!isdigit((unsigned char)*s) && !strchr(".#&+!-", *s))
 			*s = '_';
 	}
 }
