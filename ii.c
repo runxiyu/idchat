@@ -817,7 +817,7 @@ main(int argc, char *argv[])
 	default:
 		usage();
 		break;
-	} ARGEND;
+	} ARGEND
 
 	if (!*host)
 		usage();
