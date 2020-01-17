@@ -234,7 +234,7 @@ channel_new(const char *name)
 		fprintf(stderr, "%s: calloc: %s\n", argv0, strerror(errno));
 		exit(1);
 	}
-	c->next = NULL;
+
 	strlcpy(c->name, name, sizeof(c->name));
 	channel_normalize_name(c->name);
 
