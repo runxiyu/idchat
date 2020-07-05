@@ -102,7 +102,6 @@ ewritestr(int fd, const char *s)
 	for (off = 0; off < len; off += w) {
 		if ((w = write(fd, s + off, len - off)) == -1)
 			break;
-		off += w;
 	}
 	if (w == -1) {
 		fprintf(stderr, "%s: write: %s\n", argv0, strerror(errno));
