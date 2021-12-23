@@ -683,7 +683,14 @@ read_line(int fd, char *buf, size_t bufsiz)
 static void
 handle_channels_input(int ircfd, Channel *c)
 {
-	char buf[IRC_MSG_MAX];
+	/*
+	 * Do not allow to read this fully, since commands will be
+	 * prepended. It will result in too long lines sent to the
+	 * server.
+	 * TODO: Make this depend on the maximum metadata given by the
+	 * server at the beginning of the connection.
+	 */
+	char buf[IRC_MSG_MAX-64];
 
 	if (read_line(c->fdin, buf, sizeof(buf)) == -1) {
 		if (channel_reopen(c) == -1)
