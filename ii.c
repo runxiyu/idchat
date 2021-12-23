@@ -30,7 +30,7 @@ size_t strlcpy(char *, const char *, size_t);
 
 #define IRC_CHANNEL_MAX   200
 #define IRC_MSG_MAX       512 /* guaranteed to be <= than PIPE_BUF */
-#define PING_TIMEOUT      300
+#define PING_TIMEOUT      600
 
 enum { TOK_NICKSRV = 0, TOK_USER, TOK_CMD, TOK_CHAN, TOK_ARG, TOK_TEXT, TOK_LAST };
 
