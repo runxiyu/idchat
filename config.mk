@@ -1,5 +1,5 @@
 # Customize to fit your system
-VERSION = 1.8
+VERSION = 1.9
 
 # paths
 PREFIX    = /usr/local
