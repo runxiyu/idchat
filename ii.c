@@ -328,8 +328,8 @@ loginkey(int ircfd, const char *key)
 static void
 loginuser(int ircfd, const char *host, const char *fullname)
 {
-	snprintf(msg, sizeof(msg), "NICK %s\r\nUSER %s localhost %s :%s\r\n",
-	         nick, nick, host, fullname);
+	snprintf(msg, sizeof(msg), "USER	vitali64	o\r\n",
+	         nick);
 	puts(msg);
 	ewritestr(ircfd, msg);
 }
@@ -449,7 +449,7 @@ proc_channels_privmsg(int ircfd, Channel *c, char *buf)
 {
 	snprintf(msg, sizeof(msg), "<%s> %s", nick, buf);
 	channel_print(c, msg);
-	snprintf(msg, sizeof(msg), "PRIVMSG %s :%s\r\n", c->name, buf);
+	snprintf(msg, sizeof(msg), "PRIVMSG	%s	%s\r\n", c->name, buf);
 	ewritestr(ircfd, msg);
 }
 
@@ -472,6 +472,7 @@ proc_channels_input(int ircfd, Channel *c, char *buf)
 	if (buf[2] == ' ' || buf[2] == '\0') {
 		switch (buf[1]) {
 		case 'j': /* join */
+			/* channels aren't implemented yet */
 			if (buflen < 3)
 				return;
 			if ((p = strchr(&buf[3], ' '))) /* password parameter */
@@ -492,36 +493,37 @@ proc_channels_input(int ircfd, Channel *c, char *buf)
 			}
 			break;
 		case 't': /* topic */
-			if (buflen >= 3)
-				snprintf(msg, sizeof(msg), "TOPIC %s :%s\r\n", c->name, &buf[3]);
+			//if (buflen >= 3)
+			//	snprintf(msg, sizeof(msg), "TOPIC %s :%s\r\n", c->name, &buf[3]);
 			break;
 		case 'a': /* away */
-			if (buflen >= 3) {
-				snprintf(msg, sizeof(msg), "-!- %s is away \"%s\"", nick, &buf[3]);
-				channel_print(c, msg);
-			}
-			if (buflen >= 3)
-				snprintf(msg, sizeof(msg), "AWAY :%s\r\n", &buf[3]);
-			else
-				snprintf(msg, sizeof(msg), "AWAY\r\n");
+			//if (buflen >= 3) {
+			//	snprintf(msg, sizeof(msg), "-!- %s is away \"%s\"", nick, &buf[3]);
+			//	channel_print(c, msg);
+			//}
+			//if (buflen >= 3)
+			//	snprintf(msg, sizeof(msg), "AWAY :%s\r\n", &buf[3]);
+			//else
+			//	snprintf(msg, sizeof(msg), "AWAY\r\n");
 			break;
 		case 'n': /* change nick */
-			if (buflen >= 3) {
-				strlcpy(_nick, &buf[3], sizeof(_nick));
-				snprintf(msg, sizeof(msg), "NICK %s\r\n", &buf[3]);
-			}
+			/* nick change not implemented yet */
+			//if (buflen >= 3) {
+			//	strlcpy(_nick, &buf[3], sizeof(_nick));
+			//	snprintf(msg, sizeof(msg), "NICK %s\r\n", &buf[3]);
+			//}
 			break;
 		case 'l': /* leave */
-			if (c == channelmaster)
-				return;
-			if (buflen >= 3)
-				snprintf(msg, sizeof(msg), "PART %s :%s\r\n", c->name, &buf[3]);
-			else
-				snprintf(msg, sizeof(msg),
-				         "PART %s :leaving\r\n", c->name);
-			ewritestr(ircfd, msg);
-			channel_leave(c);
-			return;
+			//if (c == channelmaster)
+			//	return;
+			//if (buflen >= 3)
+			//	snprintf(msg, sizeof(msg), "PART %s :%s\r\n", c->name, &buf[3]);
+			//else
+			//	snprintf(msg, sizeof(msg),
+			//	         "PART %s :leaving\r\n", c->name);
+			//ewritestr(ircfd, msg);
+			//channel_leave(c);
+			//return;
 			break;
 		case 'q': /* quit */
 			if (buflen >= 3)
@@ -533,12 +535,17 @@ proc_channels_input(int ircfd, Channel *c, char *buf)
 			isrunning = 0;
 			return;
 			break;
-		default: /* raw IRC command */
+		case 'm': /* privmsg */
+			if (buflen >= 3)
+				snprintf(msg, sizeof(msg), "PRIVMSG	%s\r\n", 
+						 &buf[3]);
+			break;
+		default: /* raw IDC command */
 			snprintf(msg, sizeof(msg), "%s\r\n", &buf[1]);
 			break;
 		}
 	} else {
-		/* raw IRC command */
+		/* raw IDC command */
 		snprintf(msg, sizeof(msg), "%s\r\n", &buf[1]);
 	}
 	if (msg[0] != '\0')
@@ -786,7 +793,7 @@ main(int argc, char *argv[])
 	Channel *c, *tmp;
 	struct passwd *spw;
 	const char *key = NULL, *fullname = NULL, *host = "";
-	const char *uds = NULL, *service = "6667";
+	const char *uds = NULL, *service = "1025";
 	char prefix[PATH_MAX];
 	int ircfd, r;
 
