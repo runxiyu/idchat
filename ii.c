@@ -328,7 +328,7 @@ loginkey(int ircfd, const char *key)
 static void
 loginuser(int ircfd, const char *host, const char *fullname)
 {
-	snprintf(msg, sizeof(msg), "USER	vitali64	o\r\n",
+	snprintf(msg, sizeof(msg), "USER	idchat	password\r\n",
 	         nick);
 	puts(msg);
 	ewritestr(ircfd, msg);
