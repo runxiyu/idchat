@@ -61,7 +61,7 @@ static void      handle_channels_input(int, Channel *);
 static void      handle_server_output(int);
 static int       isnumeric(const char *);
 static void      loginkey(int, const char *);
-static void      loginuser(int, const char *, const char *);
+static void      loginuser(int, const char *, const char *, const char *);
 static void      proc_channels_input(int, Channel *, char *);
 static void      proc_channels_privmsg(int, Channel *, char *);
 static void      proc_server_cmd(int, char *);
@@ -326,10 +326,10 @@ loginkey(int ircfd, const char *key)
 }
 
 static void
-loginuser(int ircfd, const char *host, const char *fullname)
+loginuser(int ircfd, const char *host, const char *fullname, const char *key)
 {
-	snprintf(msg, sizeof(msg), "USER	vitali64	o\r\n",
-	         nick);
+	snprintf(msg, sizeof(msg), "USER	%s	%s\r\n",
+	         nick, key);
 	puts(msg);
 	ewritestr(ircfd, msg);
 }
@@ -568,11 +568,11 @@ proc_server_cmd(int fd, char *buf)
 		argv[i] = NULL;
 
 	/* check prefix */
-	if (buf[0] == ':') {
-		if (!(p = strchr(buf, ' ')))
+	if (buf[0] == '	') {
+		if (!(p = strchr(buf, '	')))
 			return;
 		*p = '\0';
-		for (++p; *p == ' '; p++)
+		for (++p; *p == '	'; p++)
 			;
 		cmd = p;
 		argv[TOK_NICKSRV] = &buf[1];
@@ -590,7 +590,7 @@ proc_server_cmd(int fd, char *buf)
 			*p = '\0';
 	}
 
-	if ((p = strchr(cmd, ':'))) {
+	if ((p = strchr(cmd, '	'))) {
 		*p = '\0';
 		argv[TOK_TEXT] = ++p;
 	}
@@ -657,7 +657,8 @@ proc_server_cmd(int fd, char *buf)
 		snprintf(msg, sizeof(msg), "<%s> %s", argv[TOK_NICKSRV],
 				argv[TOK_TEXT] ? argv[TOK_TEXT] : "");
 	} else {
-		return; /* can't read this message */
+		printf(argv[TOK_CMD], "\n");
+		return; /* can't read this message */ 
 	}
 	if (argv[TOK_CHAN] && !strcmp(argv[TOK_CHAN], nick))
 		channel = argv[TOK_NICKSRV];
@@ -858,7 +859,7 @@ main(int argc, char *argv[])
 	channelmaster = channel_add(""); /* master channel */
 	if (key)
 		loginkey(ircfd, key);
-	loginuser(ircfd, host, fullname && *fullname ? fullname : nick);
+	loginuser(ircfd, host, nick, key);
 	setup();
 	run(ircfd, host);
 	if (channelmaster)
